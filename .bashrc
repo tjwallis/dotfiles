@@ -6,11 +6,30 @@
 [[ $- != *i* ]] && return
 
 alias ls='ls --color=auto'
-PS1='[\u@\h \W]\$ '
+#PS1='[\u@\h \W]\$ '
+#PS1='[\u@\h \W]\$ '  # To leave the default one
+#DO NOT USE RAW ESCAPES, USE TPUT
+reset=$(tput sgr0)
+red=$(tput setaf 1)
+blue=$(tput setaf 4)
+green=$(tput setaf 2)
+
+PS1='\[$red\]\u\[$reset\] \[$blue\]\w\[$reset\] \[$red\]\$ \[$reset\]\[$green\] '
+
+# No CD necessary
+shopt -s autocd
+
+# Wrap on resize
+shopt -s checkwinsize
 
 [ -n "$XTERM_VERSION" ] && transset-df -a >/dev/null
 
 export PATH="${PATH}:/home/tjwallis/.composer/vendor/bin"
+
+PATH="$(ruby -e 'print Gem.user_dir')/bin:$PATH"
+
+PATH="$HOME/.node_modules/bin:$PATH"
+export npm_config_prefix=~/.node_modules
 
 #source /usr/share/git/completion/git-completion.bash
 
@@ -95,5 +114,7 @@ alias pacimpl="/usr/bin/pacman -D --asdep"	# 'mark as [impl]icit'	- mark one or 
 alias pacro="/usr/bin/pacman -Qtdq > /dev/null && sudo /usr/bin/pacman -Rs \$(/usr/bin/pacman -Qtdq | sed -e ':a;N;$!ba;s/\n/ /g')"
 # }}}
 
-TERM=konsole-256color
+source /usr/share/git/completion/git-prompt.sh
+
+#TERM=konsole-256color
 
